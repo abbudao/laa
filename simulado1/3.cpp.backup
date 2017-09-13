@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef vector<int> vi;
+typedef map<int, int> mii;
+vector<vector <int>> solucoes;
+ll _sieve_size; vi primes;
+bitset<20000010> bs;
+
+void sieve(ll upperbound)
+{
+  _sieve_size = upperbound +1;
+  bs.set();
+  bs[0]= bs[1]=0;
+  for (ll i=2; i<= _sieve_size; i++) if (bs[i]) {
+    for(ll j= i*i; j<= _sieve_size; j+=i) bs[j]=0;
+    primes.push_back((int)i);
+  }
+}
+bool isPrimeSieve(ll N)
+{
+  if(N <=_sieve_size) return bs[N];
+  for (int i=0; i<(int)primes.size() && (ll) primes[i]*primes[i]<= N; i++) 
+    if(N % primes[i]==0) return false;
+  return true;
+
+}
+
+int main(int argc, char *argv[])
+{
+  long j=0,i=0;
+  long long num;
+  sieve(1000000);
+  while (scanf("%d",&num)!= EOF){
+    if(num==0){
+      return  false;
+    }
+    long a=2,b=2;
+    long result_a=0,result_b=0;
+    j=0;
+    i=0;
+    while(a<num){
+      a=primes[i];
+      i++;
+      while(a+b<=num){
+        b=primes[j];
+        if(b-a>result_b-result_a and a+b==num){
+          result_a=a;
+          result_b=b;
+        }
+        j++;
+      }
+      b=2;
+      j=0;
+    }
+    if(result_b ==0 and result_a==0){
+      printf("Goldbach's conjecture is wrong.");
+    }
+    else{
+    printf("%d = %d + %d\n",num,result_a,result_b);}
+  }
+  return 0;
+}
